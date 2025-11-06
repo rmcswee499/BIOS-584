@@ -3,6 +3,7 @@ import numpy as np
 
 # This function is merely for BIOS 584 debugging purposes
 def compute_D_partial(input_signal):
+
     r"""
     :param input_signal:
     """
