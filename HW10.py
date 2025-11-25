@@ -26,7 +26,7 @@ bp_low = 0.5
 bp_upp = 6
 electrode_num = 16
 # Change the following directory to your own one.
-parent_dir = '/Users/tma33/Library/CloudStorage/OneDrive-EmoryUniversity/Emory/Rollins SPH/2025/BIOS-584/python_proj'
+parent_dir = '/Users/rmcsweeney/Documents/GitHub/BIOS-584'
 parent_data_dir = '{}/data'.format(parent_dir)
 time_index = np.linspace(0, 800, 25)
 electrode_name_ls = ['F3', 'Fz', 'F4', 'T7', 'C3', 'Cz', 'C4', 'T8', 'CP3', 'CP4', 'P3', 'Pz', 'P4', 'PO7', 'PO8', 'Oz']
@@ -58,9 +58,15 @@ eeg_trn_type = np.squeeze(eeg_trn_type, axis=1)
 # you should be able to obtain relevant data files named
 # eeg_frt_signal and eeg_frt_type
 # Write your own code below:
+frt_data_name = '{}_001_BCI_FRT_Truncated_Data_{}_{}'.format(subject_name, bp_low, bp_upp)
+frt_data_dir = '{}/{}.mat'.format(parent_data_dir, trn_data_name)
+eeg_frt_obj = sio.loadmat(trn_data_dir)
 
-
-
+eeg_frt_signal = eeg_frt_obj['Signal']
+print(eeg_frt_signal.shape)
+eeg_frt_type = eeg_frt_obj['Type']
+print(eeg_frt_type.shape)
+eeg_frt_type = np.squeeze(eeg_frt_type, axis=1)
 
 # You have completed the exploratory data analysis in HW7 and HW8.
 # The dataset has been carefully reviewed by Dr. Jane E. Huggins,
@@ -75,9 +81,31 @@ eeg_trn_type = np.squeeze(eeg_trn_type, axis=1)
 # except for LogisticRegression: set max_iter=1000
 # Write your own code below:
 
+x_train = eeg_trn_signal
+y_train = eeg_trn_type 
+x_test = eeg_frt_signal
+y_test = eeg_frt_type
 
+# Fit the logistic regression model:
+logistic_obj = LogisticRegression(max_iter=1000)
+logistic_obj.fit(x_train, y_train)
 
+logistic_preds = logistic_obj.predict(x_test) 
+print(logistic_preds)
 
+# Fit the Linear Discriminant Analysis model:
+lda_obj = LDA()
+lda_obj.fit(x_train, y_train)
+
+lda_preds = lda_obj.predict(x_test) 
+print(lda_preds)
+
+# Fit the Support Vector Machine model:
+svm_obj = SVC()
+svm_obj.fit(x_train, y_train)
+
+svm_preds = svm_obj.predict(x_test) 
+print(svm_preds)
 
 # Step 3: Evaluate model performance on both TRN and FRT files
 # Step 3.1: Prediction accuracy on TRN files
@@ -87,8 +115,14 @@ eeg_trn_type = np.squeeze(eeg_trn_type, axis=1)
 # denoted as logistic_y_trn, lda_y_trn, and svm_y_trn.
 # Write your own code below:
 
+# Edit this section here:
+log_reg_probs = logistic_obj.predict_proba(x_test_scaled)
+svm_probs = svm_obj.predict_proba(x_test_scaled)
+tree_probs = d_tree_obj.predict_proba(x_test_scaled)
 
-
+print(log_reg_probs[:5,:])
+print(svm_probs[:5,:])
+print(d_tree_probs[:5,:]) # prints rows 0-4 (the first 5)
 
 
 # Step 3.2: Prediction accuracy on FRT files
@@ -96,7 +130,15 @@ eeg_trn_type = np.squeeze(eeg_trn_type, axis=1)
 # denoted as logistic_y_frt, lda_y_frt, and svm_y_frt.
 # Write your own code below:
 
+# Edit this section here:
+# You can view the probability vector per measure per method.
+log_reg_probs = logistic_obj.predict_proba(x_test_scaled)
+svm_probs = svm_obj.predict_proba(x_test_scaled)
+tree_probs = d_tree_obj.predict_proba(x_test_scaled)
 
+print(log_reg_probs[:5,:])
+print(svm_probs[:5,:])
+print(d_tree_probs[:5,:]) # prints rows 0-4 (the first 5)
 
 
 
@@ -189,6 +231,8 @@ print(svm_frt_accuracy)
 # lda_frt_accuracy = np.mean(lda_letter_mat_frt == np.array(list(char_frt))[:, np.newaxis], axis=0)
 # svm_trn_accuracy = np.mean(svm_letter_mat_trn == np.array(list(char_trn))[:, np.newaxis], axis=0)
 # svm_frt_accuracy = np.mean(svm_letter_mat_frt == np.array(list(char_frt))[:, np.newaxis], axis=0)
+
+# These compare the values for each 
 
 # Step 5: Summary
 # Which method performs the best? Why?
