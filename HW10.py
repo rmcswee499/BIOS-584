@@ -116,14 +116,13 @@ print(svm_preds)
 # Write your own code below:
 
 # Edit this section here:
-log_reg_probs = logistic_obj.predict_proba(x_test_scaled)
-svm_probs = svm_obj.predict_proba(x_test_scaled)
-tree_probs = d_tree_obj.predict_proba(x_test_scaled)
+logistic_y_trn = logistic_obj.predict_proba(x_test)
+svm_y_trn = svm_obj.predict_proba(x_test)
+lda_y_trn = lda_obj.predict_proba(x_test)
 
-print(log_reg_probs[:5,:])
-print(svm_probs[:5,:])
-print(d_tree_probs[:5,:]) # prints rows 0-4 (the first 5)
-
+print(logistic_y_trn[:5,:])
+print(svm_y_trn[:5,:])
+print(lda_y_trn[:5,:]) # prints rows 0-4 (the first 5)
 
 # Step 3.2: Prediction accuracy on FRT files
 # Similarly, you are asked to generate stimulus-level probability for each method on FRT files,
@@ -132,13 +131,13 @@ print(d_tree_probs[:5,:]) # prints rows 0-4 (the first 5)
 
 # Edit this section here:
 # You can view the probability vector per measure per method.
-log_reg_probs = logistic_obj.predict_proba(x_test_scaled)
-svm_probs = svm_obj.predict_proba(x_test_scaled)
-tree_probs = d_tree_obj.predict_proba(x_test_scaled)
+logistic_y_frt = logistic_obj.predict_proba(x_test)
+svm_y_frt = svm_obj.predict_proba(x_test)
+lda_y_frt = lda_obj.predict_proba(x_test)
 
-print(log_reg_probs[:5,:])
-print(svm_probs[:5,:])
-print(d_tree_probs[:5,:]) # prints rows 0-4 (the first 5)
+#print(log_reg_probs[:5,:])
+#print(svm_probs[:5,:])
+#print(d_tree_probs[:5,:]) # prints rows 0-4 (the first 5)
 
 
 
